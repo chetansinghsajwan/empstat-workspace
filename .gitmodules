@@ -1,0 +1,3 @@
+[submodule "empstat-webapp"]
+	path = empstat-webapp
+	url = https://github.com/chetansinghsajwan/empstat-webapp.git
