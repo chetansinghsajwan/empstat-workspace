@@ -4,3 +4,6 @@
 [submodule "empstat-server"]
 	path = empstat-server
 	url = https://github.com/chetansinghsajwan/empstat-server.git
+[submodule "empstat-database"]
+	path = empstat-database
+	url = https://github.com/chetansinghsajwan/empstat-database.git
