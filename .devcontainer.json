@@ -1,0 +1,7 @@
+{
+    "name": "empstat-workspace",
+    "build": {
+        "dockerfile": "empstat-server/dockerfile",
+        "target": "devenv"
+    }
+}
