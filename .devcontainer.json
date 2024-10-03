@@ -1,7 +1,10 @@
 {
     "name": "empstat-workspace",
+    // "dockerComposeFile": "docker-compose-dev.yml",
+    // "service": "devcontainer",
+    // "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+
     "build": {
-        "dockerfile": "empstat-server/dockerfile",
-        "target": "devenv"
+        "dockerfile": "dockerfile"
     }
 }
