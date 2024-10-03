@@ -2,13 +2,15 @@ FROM ubuntu:24.10
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt update
-RUN apt install -y \
+RUN apt-get update
+RUN apt-get install -y \
     nodejs \
     npm
 
-RUN apt install -y \
+RUN apt-get install -y \
     git \
     vim
 
 RUN git config --global core.editor vim
+
+CMD [ "bash" ]
