@@ -1,6 +1,4 @@
 {
     "name": "empstat-workspace",
-    "dockerComposeFile": "docker-compose-dev.yml",
-    "service": "devcontainer",
-    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+    "image": "chetansinghsajwan/empstat-dev"
 }
