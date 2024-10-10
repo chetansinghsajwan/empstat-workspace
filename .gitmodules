@@ -7,3 +7,6 @@
 [submodule "empstat-database"]
 	path = empstat-database
 	url = https://github.com/chetansinghsajwan/empstat-database.git
+[submodule "empstat-datatransform"]
+	path = empstat-datatransform
+	url = https://github.com/chetansinghsajwan/empstat-datatransform.git
