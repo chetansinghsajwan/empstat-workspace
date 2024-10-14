@@ -10,3 +10,6 @@
 [submodule "empstat-datatransform"]
 	path = empstat-datatransform
 	url = https://github.com/chetansinghsajwan/empstat-datatransform.git
+[submodule "empstat-datascience"]
+	path = empstat-datascience
+	url = https://github.com/chetansinghsajwan/empstat-datascience.git
