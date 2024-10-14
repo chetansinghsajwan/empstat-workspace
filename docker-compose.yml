@@ -27,7 +27,8 @@ services:
       - server
 
   db:
-    image: postgres:17
+    build:
+      dockerfile: empstat-database/dockerfile
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
