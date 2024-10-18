@@ -1,50 +1,41 @@
 services:
   server:
     build:
-      dockerfile: empstat-server/dockerfile
+      context: empstat-server
+      dockerfile: dockerfile
     environment:
-      EMPSTAT_SERVER_PORT: 5000
-      EMPSTAT_LOG_LEVEL: info
-      EMPSTAT_NODE_ENV: debug
-      EMPSTAT_DATABASE_URL: postgresql://developer:postpass@localhost:5432/empstat?schema=public
-      EMPSTAT_ACCESS_TOKEN_SECRET: 02881a75691bca9fd2af5f475ae33a30673e48a475768ffaddf7b1b92898e85b3661c5b8afdf4b9afff6001fc45df6f34b2101423e865b4809413764d15812d9
-      EMPSTAT_REFRESH_TOKEN_SECRET: b66ccd644eaeb9990c583a5ad66a69f202fa884eb30877f232ae533c6764289f2d968db3ee756d2827a09b4f4b75aa6d0320801c64fc1c154ad8eb0daa0f7c18
-      EMPSTAT_ACCESS_TOKEN_EXPIRE_TIME: 1h
-      EMPSTAT_PASSWORD_HASH_SALT_ROUNDS: 10
+      - EMPSTAT_SERVER_PORT
+      - EMPSTAT_SERVER_LOG_LEVEL
+      - EMPSTAT_SERVER_NODE_ENV
+      - EMPSTAT_SERVER_ACCESS_TOKEN_SECRET
+      - EMPSTAT_SERVER_REFRESH_TOKEN_SECRET
+      - EMPSTAT_SERVER_ACCESS_TOKEN_EXPIRE_TIME
+      - EMPSTAT_SERVER_PASSWORD_HASH_SALT_ROUNDS
+      - EMPSTAT_DATABASE_URL=postgresql://${EMPSTAT_DATABASE_USER}:${EMPSTAT_DATABASE_PASSWORD}@database:${EMPSTAT_DATABASE_PORT}/${EMPSTAT_DATABASE_NAME}?schema=${EMPSTAT_DATABASE_SCHEMA}
     ports:
-      - 3000:3000
+      - ${EMPSTAT_SERVER_PORT}:${EMPSTAT_SERVER_PORT}
     depends_on:
-      - db
+      - database
 
   webapp:
     build:
-      dockerfile: empstat-webapp/dockerfile
+      context: empstat-webapp
+      dockerfile: dockerfile
     environment:
-      EMPSTAT_SERVER: localhost:3000
+      - REACT_APP_EMPSTAT_SERVER_URL=http://server:${EMPSTAT_SERVER_PORT}
+      - PORT=${EMPSTAT_WEBAPP_PORT}
     ports:
-      - 4000:4000
+      - ${EMPSTAT_WEBAPP_PORT}:${EMPSTAT_WEBAPP_PORT}
     depends_on:
       - server
 
-  db:
+  database:
     build:
-      dockerfile: empstat-database/dockerfile
-    volumes:
-      - db_data:/var/lib/postgresql/data
+      context: empstat-database
+      dockerfile: dockerfile
     environment:
-      POSTGRES_USER: developer
-      POSTGRES_PASSWORD: postpass
-      POSTGRES_DB: empstat
+      - POSTGRES_USER=${EMPSTAT_DATABASE_USER}
+      - POSTGRES_PASSWORD=${EMPSTAT_DATABASE_PASSWORD}
+      - POSTGRES_DB=${EMPSTAT_DATABASE_NAME}
     ports:
-      - 5432:5432
-
-  transformation:
-    build:
-      dockerfile: empstat-datatransform/dockerfile
-    environment:
-      EMPSTAT_DATABASE_URL: postgresql://developer:postpass@localhost:5432/empstat?schema=public
-    depends_on:
-      - db
-
-volumes:
-  db_data:
+      - ${EMPSTAT_DATABASE_PORT}:${EMPSTAT_DATABASE_PORT}
