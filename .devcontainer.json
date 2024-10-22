@@ -1,4 +1,6 @@
 {
-    "name": "empstat-workspace",
-    "image": "chetansinghsajwan/empstat-dev"
+  "name": "empstat-workspace",
+  "build": {
+    "dockerfile": "dockerfile-dev"
+  }
 }

@@ -1,0 +1,52 @@
+FROM ubuntu:24.10
+
+ARG DEBIAN_FRONTEND='noninteractive'
+
+# Install required packages
+RUN apt-get update && \
+    apt-get install -y \
+    nodejs \
+    npm \
+    git \
+    vim \
+    postgresql-16
+
+RUN git config --global core.editor vim
+
+# Modify the authentication method in pg_hba.conf to allow password authentication
+RUN sed -i "s/local   all             postgres                                peer/local   all             postgres                                trust/" /etc/postgresql/16/main/pg_hba.conf
+
+# Restart PostgreSQL to apply changes and set up the database and user
+RUN service postgresql start && \
+    psql --username postgres --command "ALTER USER postgres WITH PASSWORD 'postgres';" && \
+    createdb --username postgres empstat
+
+# Setup environment
+ENV EMPSTAT_DATABASE_HOST='localhost'
+ENV EMPSTAT_DATABASE_PORT='5432'
+ENV EMPSTAT_DATABASE_USER='postgres'
+ENV EMPSTAT_DATABASE_PASSWORD='posgres'
+ENV EMPSTAT_DATABASE_NAME='empstat'
+ENV EMPSTAT_DATABASE_SCHEMA='public'
+ENV EMPSTAT_DATABASE_LOG_LEVEL='info'
+
+ENV EMPSTAT_SERVER_HOST='localhost'
+ENV EMPSTAT_SERVER_PORT='4000'
+ENV EMPSTAT_SERVER_LOG_LEVEL='info'
+ENV EMPSTAT_SERVER_NODE_ENV='debug'
+ENV EMPSTAT_SERVER_ACCESS_TOKEN_SECRET='02881a75691bca9fd2af5f475ae33a30673e48a475768ffaddf7b1b92898e85b3661c5b8afdf4b9afff6001fc45df6f34b2101423e865b4809413764d15812d9'
+ENV EMPSTAT_SERVER_REFRESH_TOKEN_SECRET='b66ccd644eaeb9990c583a5ad66a69f202fa884eb30877f232ae533c6764289f2d968db3ee756d2827a09b4f4b75aa6d0320801c64fc1c154ad8eb0daa0f7c18'
+ENV EMPSTAT_SERVER_ACCESS_TOKEN_EXPIRE_TIME='100h'
+ENV EMPSTAT_SERVER_PASSWORD_HASH_SALT_ROUNDS='10'
+ENV EMPSTAT_DATABASE_URL='postgresql://${EMPSTAT_DATABASE_USER}:${EMPSTAT_DATABASE_PASSWORD}@${EMPSTAT_DATABASE_HOST}:${EMPSTAT_DATABASE_PORT}/${EMPSTAT_DATABASE_NAME}?schema=${EMPSTAT_DATABASE_SCHEMA}'
+
+ENV EMPSTAT_WEBAPP_HOST='localhost'
+ENV EMPSTAT_WEBAPP_PORT='3000'
+ENV EMPSTAT_WEBAPP_LOG_LEVEL='info'
+ENV EMPSTAT_WEBAPP_NODE_ENV='debug'
+ENV REACT_APP_EMPSTAT_SERVER_URL='http://${EMPSTAT_SERVER_HOST}:${EMPSTAT_SERVER_PORT}'
+ENV PORT='${EMPSTAT_WEBAPP_PORT}'
+
+EXPOSE ${EMPSTAT_DATABASE_PORT}
+EXPOSE ${EMPSTAT_SERVER_PORT}
+EXPOSE ${EMPSTAT_WEBAPP_PORT}
